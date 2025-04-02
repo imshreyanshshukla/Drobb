@@ -1,6 +1,7 @@
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter/material.dart';
 import "package:google_fonts/google_fonts.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SwipeableProductScreen extends StatefulWidget {
   @override
@@ -15,7 +16,9 @@ class _SwipeableProductScreenState extends State<SwipeableProductScreen> {
     SavedProductsScreen(),
     ExploreScreen(),
     CartScreen(),
-    ProfileScreen(),
+    ProfileScreen(
+      userEmail: '',
+    ),
   ];
 
   final PageController _pageController = PageController();
@@ -317,8 +320,62 @@ class ExploreScreen extends StatelessWidget {
   }
 }
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  final String userEmail; // Pass this email to fetch user details
+
+  const ProfileScreen({
+    super.key,
+    required this.userEmail,
+  });
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String name = '';
+  String email = '';
+  String phone = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData(); // Fetch user data when screen loads
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userEmail)
+          .get();
+
+      if (userDoc.exists) {
+        final data = userDoc.data() as Map<String, dynamic>;
+        setState(() {
+          name = data['name'] ?? '';
+          email = data['email'] ?? '';
+          phone = data['phone'] ?? '';
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User data not found')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching data: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,72 +389,86 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Poorv Chovatia',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name.isNotEmpty ? name : "Name not available",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              email.isNotEmpty ? email : "Email not available",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              phone.isNotEmpty
+                                  ? phone
+                                  : "No phone number provided",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        'poorvchovatia003@gmail.com',
-                        style: TextStyle(color: Colors.grey),
+                      const SizedBox(height: 16),
+                      _buildProfileOption(Icons.local_shipping, 'Past Orders'),
+                      _buildProfileOption(Icons.group, 'Share With a Friend'),
+                      _buildProfileOption(Icons.report, 'Report an Error'),
+                      _buildProfileOption(Icons.phone, 'Talk to a Founder'),
+                      const SizedBox(height: 16),
+                      _buildProfileOption(
+                          Icons.straighten, 'Edit your Measurements'),
+                      _buildProfileOption(Icons.block, 'Brand Blacklist'),
+                      _buildProfileOption(Icons.rate_review, 'Drop a Rating'),
+                      _buildProfileOption(Icons.share, 'Follow our Socials'),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'Delete Account',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                _buildProfileOption(Icons.local_shipping, 'Past Orders'),
-                _buildProfileOption(Icons.group, 'Share With a Friend'),
-                _buildProfileOption(Icons.report, 'Report an Error'),
-                _buildProfileOption(Icons.phone, 'Talk to a Founder'),
-                const SizedBox(height: 16),
-                _buildProfileOption(Icons.straighten, 'Edit your Measurements'),
-                _buildProfileOption(Icons.block, 'Brand Blacklist'),
-                _buildProfileOption(Icons.rate_review, 'Drop a Rating'),
-                _buildProfileOption(Icons.share, 'Follow our Socials'),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text(
-                      'Delete Account',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
+  // Your existing profile options builder
   static Widget _buildProfileOption(IconData icon, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -414,6 +485,23 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildProfileOption(IconData icon, String title) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: ListTile(
+      leading: Icon(icon, color: Colors.black),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () {},
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      tileColor: Colors.grey[100],
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    ),
+  );
 }
 
 class HomeScreen extends StatefulWidget {
@@ -446,6 +534,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<Map<String, String>> likedProducts = [];
   List<Map<String, String>> cartProducts = [];
   List<Map<String, String>> savedProducts = [];
+  List<Map<String, String>> rejectedProducts = [];
   late MatchEngine _matchEngine;
   List<SwipeItem> _swipeItems = [];
 
@@ -473,6 +562,45 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ));
     }
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
+  }
+
+  void _initializeSwipeItems() {
+    _swipeItems = []; // Clear old swipe items
+
+    for (var product in products) {
+      _swipeItems.add(SwipeItem(
+        content: product,
+        likeAction: () {
+          setState(() {
+            savedProducts.add(product);
+          });
+        },
+        nopeAction: () {
+          setState(() {
+            rejectedProducts.add(product); // Store rejected item
+          });
+        },
+        superlikeAction: () {
+          setState(() {
+            cartProducts.add(product);
+          });
+        },
+      ));
+    }
+
+    setState(() {
+      _matchEngine = MatchEngine(swipeItems: _swipeItems);
+    });
+  }
+
+  void _undoLastRejection() {
+    if (rejectedProducts.isNotEmpty) {
+      final lastRejected = rejectedProducts.removeLast();
+      setState(() {
+        products.insert(0, lastRejected); // Reinsert into products list
+        _initializeSwipeItems(); // Reinitialize swipe items
+      });
+    }
   }
 
   void _showFilterDialog() {
@@ -541,6 +669,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.undo, color: Colors.black),
+                    onPressed: () {
+                      print("Current Rejected Items: $rejectedProducts");
+
+                      if (rejectedProducts.isNotEmpty) {
+                        setState(() {
+                          Map<String, String> lastRejected = rejectedProducts
+                              .removeLast(); // Define 'lastRejected'
+                          products.insert(
+                              0, lastRejected); // Restore at the top
+                          _initializeSwipeItems(); // Refresh swipe stack
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('No rejected items to undo')),
+                        );
+                      }
+                    },
+                  ),
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(

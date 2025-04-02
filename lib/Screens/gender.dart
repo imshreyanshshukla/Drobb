@@ -62,7 +62,12 @@ class PreferenceTag extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WaitlistScreen()));
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                WaitlistScreen(selectedPreference: label), // Pass label here
+          ),
+        );
       },
       style: ElevatedButton.styleFrom(
           shape:

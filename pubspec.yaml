@@ -33,6 +33,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   swipe_cards: ^2.0.0+1
   google_fonts: ^6.2.1
+  firebase_core: ^2.32.0
+  firebase_messaging: ^14.7.3
+  cloud_firestore: ^4.12.2
+
 
 dev_dependencies:
   flutter_test:

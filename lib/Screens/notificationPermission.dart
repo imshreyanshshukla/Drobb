@@ -1,5 +1,6 @@
 import 'package:drobb/Screens/measurment.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -10,6 +11,34 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   bool isAllowed = false;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  /// Method to request notification permission
+  Future<void> requestNotificationPermission() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      setState(() {
+        isAllowed = true;
+      });
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+      setState(() {
+        isAllowed = true;
+      });
+    } else {
+      print('User declined or has not accepted permission');
+      setState(() {
+        isAllowed = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +78,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ],
             ),
-
-            /// Spacer to distribute content evenly
             const Spacer(),
 
             /// Notification Prompt Box
@@ -82,10 +109,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   const SizedBox(height: 12),
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isAllowed = !isAllowed;
-                      });
+                    onTap: () async {
+                      if (!isAllowed) {
+                        await requestNotificationPermission(); // Request permission when tapping 'Allow'
+                      } else {
+                        setState(() {
+                          isAllowed = false;
+                        });
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -144,8 +175,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ],
               ),
             ),
-
-            /// Spacer to distribute content evenly
             const Spacer(),
 
             /// Continue Button
@@ -155,9 +184,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MeasurementsScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MeasurementsScreen(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,

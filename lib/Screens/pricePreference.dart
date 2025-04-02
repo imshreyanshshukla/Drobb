@@ -1,7 +1,35 @@
 import 'package:drobb/Screens/notificationPermission.dart';
 import 'package:flutter/material.dart';
 
-class PricePreferencesScreen extends StatelessWidget {
+class PricePreferencesScreen extends StatefulWidget {
+  const PricePreferencesScreen({super.key});
+
+  @override
+  _PricePreferencesScreenState createState() => _PricePreferencesScreenState();
+}
+
+class _PricePreferencesScreenState extends State<PricePreferencesScreen> {
+  List<String> selectedPrices = []; // Track selected price ranges
+
+  final List<String> priceRanges = [
+    "0-500",
+    "500-1000",
+    "1000-2000",
+    "2000-3000",
+    "3000-5000",
+    "5000+"
+  ];
+
+  void toggleSelection(String price) {
+    setState(() {
+      if (selectedPrices.contains(price)) {
+        selectedPrices.remove(price); // Deselect if already selected
+      } else {
+        selectedPrices.add(price); // Select if not selected
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,23 +78,35 @@ class PricePreferencesScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 30),
-            ...[
-              "0-500",
-              "500-1000",
-              "1000-2000",
-              "2000-3000",
-              "3000-5000",
-              "5000+"
-            ].map((price) => Padding(
+            const SizedBox(height: 30),
+            // Price range buttons with dynamic selection
+            ...priceRanges.map((price) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text(price,
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.black)),
+                      onPressed: () =>
+                          toggleSelection(price), // Toggle on click
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: selectedPrices.contains(price)
+                              ? Colors.black
+                              : Colors.grey, // Border color based on selection
+                        ),
+                        backgroundColor: selectedPrices.contains(price)
+                            ? Colors.black
+                            : Colors
+                                .white, // Background color based on selection
+                      ),
+                      child: Text(
+                        price,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: selectedPrices.contains(price)
+                              ? Colors.white
+                              : Colors.black, // Text color based on selection
+                        ),
+                      ),
                     ),
                   ),
                 )),
@@ -75,14 +115,30 @@ class PricePreferencesScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  if (selectedPrices.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Please select at least one price range.'),
+                      ),
+                    );
+                    return;
+                  }
+                  // Pass selected prices to next screen or use as per logic
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationScreen()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationScreen(
+                          // You can pass selectedPrices here if needed
+                          ),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                child: const Text("Continue",
-                    style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

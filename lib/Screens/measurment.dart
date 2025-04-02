@@ -129,24 +129,35 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: ["Tight", "True to Size", "Oversized"].map((fit) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        fitPreference = fit;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          fitPreference == fit ? Colors.black : Colors.white,
-                      foregroundColor:
-                          fitPreference == fit ? Colors.white : Colors.black,
-                      side: BorderSide(color: Colors.black),
+                return Expanded(
+                  // Ensures equal button width without overflow
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          fitPreference = fit;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            fitPreference == fit ? Colors.black : Colors.white,
+                        foregroundColor:
+                            fitPreference == fit ? Colors.white : Colors.black,
+                        side: BorderSide(color: Colors.black),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12), // Keeps button height consistent
+                      ),
+                      child: Text(
+                        fit,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14), // Uniform font size
+                        overflow:
+                            TextOverflow.ellipsis, // Prevents multi-line text
+                      ),
                     ),
-                    child: Text(fit),
                   ),
                 );
               }).toList(),
