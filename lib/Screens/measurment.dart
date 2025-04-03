@@ -31,13 +31,13 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
           children: [
             const SizedBox(height: 50),
             Row(
-              children: List.generate(8, (index) {
+              children: List.generate(5, (index) {
                 return Expanded(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 2),
                     height: 5,
                     decoration: BoxDecoration(
-                      color: index == 6 ? Colors.black : Colors.grey[300],
+                      color: index == 4 ? Colors.black : Colors.grey[300],
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "960408265264",
-    "project_id": "drobb-application",
-    "storage_bucket": "drobb-application.firebasestorage.app"
+    "project_number": "195222980875",
+    "project_id": "drobb-app",
+    "storage_bucket": "drobb-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:960408265264:android:6a75e930d1f9ded51d43f5",
+        "mobilesdk_app_id": "1:195222980875:android:201a55c3fa7c2fb88b3a0e",
+        "android_client_info": {
+          "package_name": "com.drobb.drobb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg6MUWPjJdtWWQo56CJKqemgtYtMPvojA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195222980875:android:f15a5ec913fae4ca8b3a0e",
         "android_client_info": {
           "package_name": "com.example.drobb"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCgqmxNSVjmD_T2LphWQb_Z73eVQNvHet0"
+          "current_key": "AIzaSyAg6MUWPjJdtWWQo56CJKqemgtYtMPvojA"
         }
       ],
       "services": {

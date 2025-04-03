@@ -51,13 +51,11 @@ class _SwipeableProductScreenState extends State<SwipeableProductScreen> {
           _pageController.jumpToPage(index); // Navigate to selected page
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark), label: 'Bookmarked'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Cart'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         ],
       ),
     );
@@ -141,21 +139,6 @@ class SavedProductsScreen extends StatelessWidget {
 }
 
 class ExploreScreen extends StatelessWidget {
-  final List<Map<String, String>> trendingProfiles = [
-    {
-      'image': 'assets/images/ch.webp',
-      'name': 'Cher Horowitz',
-    },
-    {
-      'image': 'assets/images/aa.jpg',
-      'name': 'Andie Anderson',
-    },
-    {
-      'image': 'assets/images/bj.webp',
-      'name': 'Bridget Jones',
-    },
-  ];
-
   final List<Map<String, String>> wishlists = [
     {
       'image': 'assets/images/011.jpg',
@@ -213,40 +196,6 @@ class ExploreScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  SizedBox(
-                    height: 140,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: trendingProfiles.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemBuilder: (context, index) {
-                        final profile = trendingProfiles[index];
-                        return Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                profile['image']!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                    Icons.image_not_supported,
-                                    size: 100),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              profile['name']!,
-                              style: const TextStyle(fontSize: 12),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
                   const Text(
                     'Browse Wishlists',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -512,22 +461,52 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<Map<String, String>> products = [
     {
-      'image': 'assets/images/21.jpg',
+      'image': 'assets/images/1.jpg',
       'title': 'Minimalism Cotton Cami Dress',
       'brand': 'Commense',
       'price': '₹3600'
     },
     {
-      'image': 'assets/images/22.jpg',
+      'image': 'assets/images/2.jpg',
       'title': 'Summer Linen Dress',
       'brand': 'Ardene',
       'price': '₹4200'
     },
     {
-      'image': 'assets/images/23.jpg',
+      'image': 'assets/images/3.jpg',
       'title': 'Casual Maxi Dress',
       'brand': 'H&M',
       'price': '₹5200'
+    },
+    {
+      'image': 'assets/images/4.jpg',
+      'title': 'Minimalism Cotton Cami Dress',
+      'brand': 'Zara',
+      'price': '₹3000'
+    },
+    {
+      'image': 'assets/images/5.jpg',
+      'title': 'Minimalism Cotton Cami Dress',
+      'brand': "Levi's",
+      'price': '₹2000'
+    },
+    {
+      'image': 'assets/images/6.jpg',
+      'title': 'Minimalism Cotton Cami Dress',
+      'brand': 'U.S. Polo',
+      'price': '₹4000'
+    },
+    {
+      'image': 'assets/images/7.jpg',
+      'title': 'Minimalism Cotton Cami Dress',
+      'brand': 'Nike',
+      'price': '₹1500'
+    },
+    {
+      'image': 'assets/images/8.jpg',
+      'title': 'Minimalism Cotton Cami Dress',
+      'brand': 'Benetton',
+      'price': '₹2600'
     },
   ];
 

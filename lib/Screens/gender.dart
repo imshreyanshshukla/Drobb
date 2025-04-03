@@ -13,7 +13,7 @@ class SelectionPage extends StatelessWidget {
           children: [
             const SizedBox(height: 50),
             Row(
-              children: List.generate(8, (index) {
+              children: List.generate(5, (index) {
                 return Expanded(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 2),
