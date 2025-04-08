@@ -5,7 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Check if Firebase has already been initialized
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
+
   runApp(MyApp());
 }
 
