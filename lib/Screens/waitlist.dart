@@ -32,6 +32,7 @@ class _WaitlistScreenState extends State<WaitlistScreen> {
     }
 
     try {
+      // Attempt Firestore write but don't block UI on it
       await FirebaseFirestore.instance.collection('waitlist').doc(email).set({
         'name': name,
         'phone': phone.isEmpty ? "" : phone,
@@ -39,26 +40,19 @@ class _WaitlistScreenState extends State<WaitlistScreen> {
         'preference': widget.selectedPreference,
         'contact_me': isChecked,
         'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      // Show success feedback
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data saved successfully!')),
-      );
-
-      // Delay slightly to allow SnackBar to show before navigation
-      await Future.delayed(Duration(milliseconds: 300));
-
-      if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PricePreferencesScreen(),
-          ),
-        );
-      }
+      }).timeout(Duration(seconds: 2)); // Optional timeout
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save data: $e')),
+        SnackBar(content: Text('Proceeding anyway. Data save failed: $e')),
+      );
+    }
+
+    // Always navigate regardless of Firestore success
+    if (mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PricePreferencesScreen(),
+        ),
       );
     }
   }
