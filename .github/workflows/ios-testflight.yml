@@ -1,0 +1,33 @@
+name: Deploy iOS to TestFlight
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19.0"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS
+        run: flutter build ios --release
+
+      - name: Install fastlane
+        run: sudo gem install fastlane -NV
+
+      - name: Upload to TestFlight
+        working-directory: ios
+        run: fastlane beta
+        env:
+          APP_STORE_CONNECT_API_KEY_PATH: ./fastlane/AuthKey_M5CCJ29PS4.p8
