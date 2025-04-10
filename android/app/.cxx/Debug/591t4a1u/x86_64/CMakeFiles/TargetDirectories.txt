@@ -1,0 +1,2 @@
+D:/GItHub/Drobb/android/app/.cxx/Debug/591t4a1u/x86_64/CMakeFiles/edit_cache.dir
+D:/GItHub/Drobb/android/app/.cxx/Debug/591t4a1u/x86_64/CMakeFiles/rebuild_cache.dir
