@@ -1,7 +1,8 @@
 import 'package:drobb/Screens/gender.dart';
-import 'package:drobb/firebase_options.dart';
+import 'package:drobb/Screens/mainScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,13 +25,15 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  final bool isFirstLaunch;
+
+  const MyApp({super.key, required this.isFirstLaunch});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SelectionPage(),
+      home: isFirstLaunch ? SelectionPage() : SwipeableProductScreen(),
     );
   }
 }

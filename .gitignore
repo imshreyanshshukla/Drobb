@@ -3,6 +3,8 @@
 *.log
 *.pyc
 *.swp
+*.dSYM
+*.dSYM.zip
 .DS_Store
 .atom/
 .buildlog/
@@ -41,3 +43,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+ios/Runner.app.dSYM.zip
+
